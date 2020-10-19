@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FilmesController;
+use App\Http\Controllers\TagController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,3 +24,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\FilmesController::class, 'index'])->name('home');
 
 Route::resource('/filmes', FilmesController::class)->middleware('auth');
+
+Route::resource('/tags', TagController::class)->middleware('auth');

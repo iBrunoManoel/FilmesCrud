@@ -10,7 +10,7 @@ use App\Models\Image;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Tag;
 
 class FilmesController extends Controller
 {
@@ -32,7 +32,8 @@ class FilmesController extends Controller
      */
     public function create()
     {
-        return view('filmes.create');
+        $tags = Tag::all();
+        return view('filmes.create', compact('tags'));
     }
 
     /**
@@ -45,16 +46,19 @@ class FilmesController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => ['required', 'string', 'min:3', 'max:100'],
-            'autor' => ['required', 'string', 'min:3', 'max:100'],
-            'resumo' => ['required', 'string', 'min:15', 'max:255'],
-            'image' => ['required', 'mimes:jpeg,png', 'dimensions:min_width=200,min_height=200']
-
+            'autor' => ['required', 'string', 'min:3', 'max:100', 'different:nome'],
+            'resumo' => ['string', 'min:15', 'max:255', 'nullable', 'alpha_dash', 'alpha_num'],
+            'nota' => ['required', 'integer', 'min:1', 'max:11', 'numeric'],
+            'image' => ['required', 'mimes:jpeg,png', 'dimensions:min_width=200,min_height=200', 'image', 'file'],
+            'tags_id' => ['array', 'required', 'bail'],
         ]);
-
 
         $filmes = new Filmes($validatedData);
         $filmes->user_id = Auth::id();
         $filmes->save();
+        $filmes->tags()->attach($validatedData['tags_id']);
+
+
 
         if ($request->hasFile('image') and $request->file('image')->isValid()) {
             $path = $request->file('image')->store('filme');
@@ -87,7 +91,8 @@ class FilmesController extends Controller
      */
     public function edit(Filmes $filme)
     {
-        return view('filmes.edit', compact('filme'));
+        $tags = Tag::all();
+        return view('filmes.edit', compact('filme', 'tags'));
         //
     }
 
@@ -102,13 +107,16 @@ class FilmesController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => ['required', 'string', 'min:3', 'max:100'],
-            'autor' => ['required', 'string', 'min:3', 'max:100'],
-            'resumo' => ['required', 'string', 'min:15', 'max:255'],
-            'image' => ['required', 'mimes:jpeg,png', 'dimensions:min_width=200,min_height=200']
+            'autor' => ['required', 'string', 'min:3', 'max:100', 'different:nome'],
+            'resumo' => ['string', 'min:15', 'max:255', 'nullable', 'alpha_dash', 'alpha_num'],
+            'nota' => ['required', 'integer', 'min:1', 'max:11', 'numeric'],
+            'image' => ['required', 'mimes:jpeg,png',  'dimensions:min_width=200,min_height=200', 'image', 'file'],
+            'tags_id' => ['array', 'required', 'bail'],
         ]);
 
         if ($filme->user_id === Auth::id()) {
             $filme->update($request->all());
+            $filme->tags()->sync($validatedData['tags_id']);
 
             if ($request->hasFile('image') and $request->file('image')->isValid()) {
                 $filme->image->delete();

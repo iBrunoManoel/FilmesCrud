@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilmesTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateFilmesTable extends Migration
      */
     public function up()
     {
-        Schema::create('filmes', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('autor');
-            $table->string('resumo');
-            $table->integer('nota');
+            $table->string('name', 60)->unique();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
@@ -32,6 +29,6 @@ class CreateFilmesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('filmes');
+        Schema::dropIfExists('tags');
     }
 }

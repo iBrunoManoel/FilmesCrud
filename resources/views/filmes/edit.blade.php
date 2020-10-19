@@ -37,8 +37,24 @@
             <input type="text" class="form-control" name="resumo" placeholder="RESUMO" value="{{$filme->resumo}}">
         </div>
         <div class="form-group">
+            <label for="resumo">Nota</label>
+            <input type="number" class="form-control" name="nota" placeholder="NOTA" value="{{$filme->nota}}">
+        </div>
+
+        <div class="form-group">
             <label for="Arquivo">Imagem</label>
             <input type="file" class="form-control" name="image">
+        </div>
+        <div class="form-group">
+            <select class="custom-select" name="tags_id[]" multiple>
+                @foreach($tags as $tag)
+                @if($filme->tags->contains($tag))
+                <option value="{{$tag->id}}" selected>{{$tag->name}}</option>
+                @else
+                <option value="{{$tag->id}}">{{$tag->name}}</option>
+                @endif
+                @endforeach
+            </select>
         </div>
         <button type="submit" class="btn btn-outline-secondary">Editar</button>
         <a type="button" class="btn btn-outline-secondary" href="{{ route ('filmes.index')}}">Voltar</a> </div>

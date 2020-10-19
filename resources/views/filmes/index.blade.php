@@ -1,9 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-
 <html lang="en">
-
 
 <head>
     <meta charset="UTF-8">
@@ -14,11 +12,18 @@
 <body><br>
     <div class="d-flex align-items-center justify-content-center">
 
-        <a class="btn btn-outline-secondary" href="{{route('filmes.create')}}">Adcionar Filme</a>
-
-
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Opções
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ route ('tags.create')}}">Cadastrar tag</a>
+                <a class="dropdown-item" href="{{ route ('filmes.create')}}">Cadastar filme</a>
+                <a class="dropdown-item" href="{{ route ('tags.index')}}">Opções de tag</a>
+            </div>
+        </div>
     </div>
-    </div> <br> <br>
+    <br> <br>
     <div class="album py-5 bg-light">
         <div class="container">
 
@@ -32,6 +37,21 @@
                             @endisset
                             <h5 class="card-title">{{$filme->nome}}</h5>
                             <p class="card-text">{{$filme->resumo}}</p>
+                            <p class="card-text">{{$filme->nota}}</p>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-inline">
+                                        @foreach($filme->tags as $tag)
+                                        <li class="list-inline-item">
+                                            <h5>
+                                                <span class="badge badge-secondary h4">#{{$tag->name}}
+                                                </span>
+                                            </h5>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
                             <form action="{{route('filmes.destroy', $filme->id)}}" method="post">
                                 @csrf
                                 @method('DELETE')

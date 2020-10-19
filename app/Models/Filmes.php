@@ -15,9 +15,14 @@ class Filmes extends Model
         'nome',
         'autor',
         'resumo',
+        'nota',
     ];
     public function image()
     {
         return $this->hasOne('App\Models\Image');
+    }
+    public function tags()
+    {
+        return $this->belongsToMany('App\Models\Tag')->withTimestamps();
     }
 }
