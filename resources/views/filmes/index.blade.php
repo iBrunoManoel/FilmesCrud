@@ -31,10 +31,8 @@
                 @foreach($filmes as $filme)
                 <div class="d-flex flex-row bd-highlight mb-3">
                     <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            @isset($filme->image)
+                        <div class="card-body">                         
                             <img class="card-img-top" src="{{ asset('storage/'.$filme->image->path)}}" alt="Card image cap">
-                            @endisset
                             <h5 class="card-title">{{$filme->nome}}</h5>
                             <p class="card-text">{{$filme->resumo}}</p>
                             <p class="card-text">{{$filme->nota}}</p>
